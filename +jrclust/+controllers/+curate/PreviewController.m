@@ -307,7 +307,7 @@ classdef PreviewController < handle
         function saveThresh(obj)
             %SAVETHRESH Export siteThresh to file, update hCfg.threshFile
             siteThresh = obj.siteThresh; %#ok<NASGU,PROP> (for saving)
-            threshFile = jrclust.utils.subsExt(obj.hCfg.configFile, '_thresh.mat');
+            threshFile = strrep(obj.hCfg.configFile, '.prm', '_thresh.mat');
             save(threshFile, 'siteThresh'); % also need to store filter values?
 
             obj.hCfg.threshFile = threshFile;

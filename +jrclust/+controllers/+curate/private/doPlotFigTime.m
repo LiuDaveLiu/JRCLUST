@@ -6,7 +6,7 @@ function hFigTime = doPlotFigTime(hFigTime, hClust, hCfg, selected, maxAmp, iSit
 
     timeLimits = double([0, abs(hClust.spikeTimes(end))/hCfg.sampleRate]);
     % construct plot for the first time
-    if ~hFigTime.hasAxes('default')
+    if isempty(hFigTime.figData)
         hFigTime.addAxes('default');
         hFigTime.axApply('default', @set, 'Position', [.05 .2 .9 .7], 'XLimMode', 'manual', 'YLimMode', 'manual');
 
@@ -24,6 +24,14 @@ function hFigTime = doPlotFigTime(hFigTime, hClust, hCfg, selected, maxAmp, iSit
         hFigTime.plotApply('hRect', @setPositionConstraintFcn, makeConstrainToRectFcn('imrect', timeLimits, [-4000 4000]));
 
         hFigTime.setHideOnDrag('background'); % hide background spikes when dragging
+<<<<<<< HEAD
+=======
+        if ~isempty(hCfg.time_tick_show) % tick mark
+            hFigTime.axApply('default', @set, 'XTick', timeLimits(1):hCfg.time_tick_show:timeLimits(end));
+        end
+
+        hFigTime.figData.isPlotted = true;
+>>>>>>> parent of eb16aa4... WIP: misc
     end
 
     [bgFeatures, bgTimes] = getFigTimeFeatures(hClust, iSite); % plot background

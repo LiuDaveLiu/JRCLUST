@@ -189,8 +189,13 @@ function hCFig = RDPreview(hClust)
         plotRD();
         plotWaves();
 
+<<<<<<< HEAD
         hCFig.wait(0);
         jrclust.utils.tryClose(hBox);
+=======
+        hCFig.wait(false);
+        close(hBox);
+>>>>>>> parent of eb16aa4... WIP: misc
         set(handles, 'Enable', 'on');
     end
 
@@ -219,7 +224,7 @@ function hCFig = RDPreview(hClust)
 
         hFigRD.close();
         hFigWav.close();
-        jrclust.utils.tryClose(hBox);
+        close(hBox);
         delete(hObject);
     end
 

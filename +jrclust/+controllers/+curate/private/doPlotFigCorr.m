@@ -34,7 +34,7 @@ function hFigCorr = doPlotFigCorr(hFigCorr, hClust, hCfg, selected)
     lagTime = lagSamp*jitterMs;
 
     % draw the plot
-    if ~hFigCorr.hasAxes('default')
+    if isempty(hFigCorr.figData)
         hFigCorr.addAxes('default');
         hFigCorr.addPlot('hBar', @bar, lagTime, intCount, 1);
         hFigCorr.axApply('default', @xlabel, 'Time (ms)');
@@ -42,7 +42,11 @@ function hFigCorr = doPlotFigCorr(hFigCorr, hClust, hCfg, selected)
         hFigCorr.axApply('default', @grid, 'on');
         hFigCorr.axApply('default', @set, 'YScale', 'log');
     else
+<<<<<<< HEAD
         hFigCorr.updatePlot('hBar', lagTime, intCount);
+=======
+        hFigCorr.update('hBar', timeLag, intCount);
+>>>>>>> parent of eb16aa4... WIP: misc
         %set(hFigCorr.figData.hBar, 'XData', timeLag, 'YData', intCount);
     end
 

@@ -201,6 +201,59 @@ classdef CurateController < handle
                 case 'b' % toggle background spikes
                     hFigTime.figData.doPlotBG = hFigTime.toggleVisible('background');
 
+                case 'c' % compare pca across channels
+                    disp('channel pca');
+%                     hMsg = jrclust.utils.qMsgBox('Plotting...');
+%                     figure; hold on;
+%                     [mrWav_mean1, viSite1] = mrWav_int_mean_clu_(obj.selected(1));
+%                     [~, mrPv1] = pca(mrWav_mean1, 'NumComponents', P.nPc_dip, 'Center', 1);
+%                     mrPv1 = norm_mr_(mrPv1);
+%
+%                     if keyMod(event, 'control') %show chain of clusters
+%                         trPv1 = mrPv1;
+%                         iClu_next = get_next_clu_(S_clu, obj.selected(1));
+%                         viClu_track = obj.selected(1);
+%                         while ~isempty(iClu_next)
+%                             [mrWav_mean1, viSite1] = mrWav_int_mean_clu_(iClu_next);
+%                             [~, mrPv1a] = pca(mrWav_mean1, 'NumComponents', P.nPc_dip, 'Center', 1);
+%                             mrPv1a = norm_mr_(mrPv1a);
+%                             mrPv1 = flip_prinvec_(mrPv1a, mean(trPv1,3));
+%                             trPv1 = cat(3, trPv1, mrPv1);
+%                             viClu_track(end+1) = iClu_next;
+%
+%                             iClu_next = get_next_clu_(S_clu, iClu_next);
+%                         end
+%                         multiplot(plot(nan,nan,'k'), 1, 1:size(trPv1,1), trPv1);
+%             %             mr2plot(norm_mr_(mrPv1), 'scale', 1, 'LineStyle', 'k');
+%                         vcTitle = sprintf('PCA across chan: Clu %s', sprintf('%d,', viClu_track));
+%                     elseif ~isempty(S0.iCluPaste)
+%                         [mrWav_mean2, viSite1] = mrWav_int_mean_clu_(S0.iCluPaste);
+%                         [~, mrPv2] = pca(mrWav_mean2, 'NumComponents', P.nPc_dip);
+%                         mrPv2 = match_mrPv_(mrPv2, mrPv1);
+%             %             mrPv2 = flip_prinvec_(mrPv2, mrPv1);
+%                         mr2plot(norm_mr_(mrPv1), 'scale', 1, 'LineStyle', 'k');
+%                         mr2plot(norm_mr_(mrPv2), 'scale', 1, 'LineStyle', 'r--');
+%                         vcTitle = sprintf('PCA across chan: Clu %d vs %d', obj.selected(1), S0.iCluPaste);
+%                     else
+%                         mr2plot(norm_mr_(mrPv1), 'scale', 1, 'LineStyle', 'r');
+%                         vcTitle = sprintf('PCA across chan: Clu %d', obj.selected(1));
+%                     end
+%             %         mr2plot(mrPv1, 'scale', 1, 'LineStyle', 'k');
+%                     grid on;
+%                     title_(vcTitle);
+%             %         if ~isempty(S0.iCluPaste)
+%             %             compare_interp_(Sclu, obj.selected(1), S0.iCluPaste);
+%             %         end
+%                     try close(hMsg); catch; end
+
+                case 'e' % export selected to workspace
+                    disp('export');
+%                     eval(sprintf('mrFet_clu%d = getDispFeaturesCluster(obj.selected(1));', obj.selected(1)));
+%                     mrDist1 = squareform(pdist(mrFet1'));
+%                     vrFet1 = sqrt(sum(mrFet1.^2));
+%                     mrDist1 = bsxfun(@rdivide, mrDist1, vrFet1); %norm
+%                     eval(sprintf('assignWorkspace_(mrFet_clu%d);', obj.selected(1)));
+
                 case 'f' % toggle feature display
                     if strcmp(obj.hCfg.dispFeature, 'vpp')
                         obj.updateProjection(obj.hCfg.clusterFeature);
@@ -247,7 +300,7 @@ classdef CurateController < handle
                             obj.splitCluster(iCluster, retained);
                         end
                     end
-            end % switch
+            end
         end
 
         function keyPressFigWav(obj, hObject, hEvent)
@@ -343,10 +396,7 @@ classdef CurateController < handle
                         hFigWav.setWindow(iCluster + [-1, 1]*6, iSite + [-1, 1]*(obj.hCfg.nSiteDir*2+1), [0 obj.hClust.nClusters+1], [0 nSites+1]);
                     end
 
-                case 'a'
-                    obj.updateFigWav();
-                    obj.updateSelect(obj.selected);
-
+%                 case 'a', update_spikes_(S0); clu_info_(S0);
                 case 'h'
                     jrclust.utils.qMsgBox(hFigWav.figData.helpText, 1);
 
@@ -638,6 +688,7 @@ classdef CurateController < handle
             hFig.figApply(@set, 'MenuBar','None');
 
             obj.hMenus('FileMenu') = hFig.uimenu('Label', 'File');
+<<<<<<< HEAD
             uimenu(obj.hMenus('FileMenu'), 'Label', 'Save', 'Callback', @obj.saveFiles);
             uimenu(obj.hMenus('FileMenu'), 'Label', 'Save figures as .fig', 'Callback', @(hO, hE) obj.saveFigures('.fig'));
             uimenu(obj.hMenus('FileMenu'), 'Label', 'Save figures as .png', 'Callback', @(hO, hE) obj.saveFigures('.png'));
@@ -647,34 +698,45 @@ classdef CurateController < handle
             uimenu(obj.hMenus('FileMenu'), 'Label', 'Export selected mean unit waveforms to workspace', 'Callback', @(hO, hE) obj.exportMeanWf(0));
             uimenu(obj.hMenus('FileMenu'), 'Label', 'Export all traces from the selected unit', 'Callback', @(hO, hE) obj.exportTraces());
             uimenu(obj.hMenus('FileMenu'), 'Label', 'Export firing rate for all units', 'Callback', @(hO, hE) obj.exportFiringRate());
+=======
+            uimenu(obj.hMenus('FileMenu'), 'Label', 'Save', 'Callback', @obj.saveFiles); % save_manual_
+            uimenu(obj.hMenus('FileMenu'), 'Label', 'Save figures as .fig', 'Callback', @(hO, hE) obj.saveFigures('.fig')); % save_figures_
+            uimenu(obj.hMenus('FileMenu'), 'Label', 'Save figures as .png', 'Callback', @(hO, hE) obj.saveFigures('.png')); % save_figures_
+%             uimenu(obj.hMenus('FileMenu'), 'Label', 'Export units to csv', 'Callback', @export_csv_, 'Separator', 'on');
+%             uimenu(obj.hMenus('FileMenu'), 'Label', 'Export unit qualities to csv', 'Callback', @(hO, hE)export_quality_);
+%             uimenu(obj.hMenus('FileMenu'), 'Label', 'Export all mean unit waveforms', 'Callback', @export_tmrWav_clu_);
+%             uimenu(obj.hMenus('FileMenu'), 'Label', 'Export selected mean unit waveforms', 'Callback', @(hO, hE)export_mrWav_clu_);
+%             uimenu(obj.hMenus('FileMenu'), 'Label', 'Export all waveforms from the selected unit', 'Callback', @(hO, hE)export_tnWav_spk_);
+%             uimenu(obj.hMenus('FileMenu'), 'Label', 'Export firing rate for all units', 'Callback', @(hO, hE)export_rate_);
+>>>>>>> parent of eb16aa4... WIP: misc
             uimenu(obj.hMenus('FileMenu'), 'Label', 'Exit', 'Callback', @(hO, hE) obj.endSession(), 'Separator', 'on', 'Accelerator', 'Q');
 
             obj.hMenus('EditMenu') = hFig.uimenu('Label', 'Edit');
             uimenu(obj.hMenus('EditMenu'), 'Label', '[M]erge', 'Callback', @(hO, hE) obj.mergeSelected());
-            uimenu(obj.hMenus('EditMenu'), 'Label', 'Merge auto', 'Callback', @(hO, hE) obj.autoMerge());
+%             uimenu(obj.hMenus('EditMenu'),'Label', 'Merge auto', 'Callback', @(hO, hE) merge_auto_());
             uimenu(obj.hMenus('EditMenu'), 'Label', '[D]elete', 'Callback', @(hO, hE) obj.deleteClusters(), 'Separator', 'on');
-            uimenu(obj.hMenus('EditMenu'), 'Label', 'Delete auto', 'Callback', @(hO, hE) obj.autoDelete());
+%             uimenu(obj.hMenus('EditMenu'),'Label', 'Delete auto', 'Callback', @(hO, hE) delete_auto_());
             uimenu(obj.hMenus('EditMenu'), 'Label', 'Delete annotated', 'Callback', @(hO, hE) obj.deleteAnnotated()); % TW
             uimenu(obj.hMenus('EditMenu'), 'Label', '[S]plit', 'Callback', @(hO, hE) obj.autoSplit(1), 'Separator', 'on');
             uimenu(obj.hMenus('EditMenu'), 'Label', 'Auto split max-chan', 'Callback', @(hO, hE) obj.autoSplit(0));
             uimenu(obj.hMenus('EditMenu'), 'Label', 'Auto split multi-chan', 'Callback', @(hO, hE) obj.autoSplit(1));
 
             obj.hMenus('ViewMenu') = uimenu(hFig, 'Label', 'View');
-            uimenu(obj.hMenus('ViewMenu'), 'Label', 'Show traces', 'Callback', @(hO, hE) obj.showTraces());
-            uimenu(obj.hMenus('ViewMenu'), 'Label', 'View all [R]', 'Callback', @(hO, hE) obj.keyPressFigWav([], struct('Key', 'r')));
+            uimenu(obj.hMenus('ViewMenu'),'Label', 'Show traces', 'Callback', @(hO, hE) obj.showTraces());
+            uimenu(obj.hMenus('ViewMenu'),'Label', 'View all [R]', 'Callback', @(hO, hE) obj.keyPressFigWav([], struct('Key', 'r')));
             uimenu(obj.hMenus('ViewMenu'), 'Label', '[Z]oom selected', 'Callback', @(hO, hE) obj.keyPressFigWav([], struct('Key', 'z')));
             uimenu(obj.hMenus('ViewMenu'), 'Label', '[W]aveform (toggle)', 'Callback', @(hO, hE) obj.keyPressFigWav([], struct('Key', 'w')));
-            uimenu(obj.hMenus('ViewMenu'), 'Label', '[N]umbers (toggle)', 'Callback', @(hO, hE) obj.keyPressFigWav([], struct('Key', 'n')));
-            uimenu(obj.hMenus('ViewMenu'), 'Label', 'Show raw waveform', 'Callback', @(hO, hE) obj.toggleRaw(hO))
-            %uimenu(obj.hMenus('ViewMenu'), 'Label', 'Threshold by sites', 'Callback', @(hO, hE) keyPressFcn_thresh_(hFig, 'n'));
-            uimenu(obj.hMenus('ViewMenu'), 'Label', 'Reset window positions', 'Callback', @(hO, hE) obj.resetPositions());
-            uimenu(obj.hMenus('ViewMenu'), 'Label', 'Show config file', 'Callback', @(hO, hE) obj.hCfg.edit());
-
-            obj.hMenus('ProjMenu') = uimenu(hFig, 'Label', 'Projection');
+            uimenu(obj.hMenus('ViewMenu'),'Label', '[N]umbers (toggle)', 'Callback', @(hO, hE) obj.keyPressFigWav([], struct('Key', 'n')));
+            uimenu(obj.hMenus('ViewMenu'),'Label', 'Show raw waveform', 'Callback', @(hO, hE) obj.toggleRaw(hO))
+%             %uimenu(obj.hMenus('ViewMenu'),'Label', 'Threshold by sites', 'Callback', @(hO, hE)keyPressFcn_thresh_(hFig, 'n'));
+            uimenu(obj.hMenus('ViewMenu'),'Label', 'Reset window positions', 'Callback', @(hO, hE) obj.resetPositions());
+%
+            obj.hMenus('ProjMenu') = uimenu(hFig,'Label', 'Projection');
             uimenu(obj.hMenus('ProjMenu'), 'Label', 'vpp', 'Callback', @(hO, hE) obj.updateProjection('vpp'));
             uimenu(obj.hMenus('ProjMenu'), 'Label', 'pca', 'Callback', @(hO, hE) obj.updateProjection('pca'));
             uimenu(obj.hMenus('ProjMenu'), 'Label', 'ppca', 'Callback', @(hO, hE) obj.updateProjection('ppca'));
             % uimenu(obj.hMenus('ProjMenu'), 'Label', 'cov', 'Callback', @(hO, hE) obj.updateProjection('cov'));
+<<<<<<< HEAD
 
             obj.hMenus('PlotMenu') = uimenu(hFig, 'Label', 'Plot');
             uimenu(obj.hMenus('PlotMenu'), 'Label', 'Firing rate vs. aux. input (all units)', 'Callback', @(hO, hE) obj.plotAuxRate(0));
@@ -690,6 +752,23 @@ classdef CurateController < handle
 
             obj.hMenus('HelpMenu') = uimenu(hFig, 'Label', 'Help');
             uimenu(obj.hMenus('HelpMenu'), 'Label', '[H]elp', 'Callback', @(hO, hE) obj.keyPressFigWav([], struct('Key', 'h')));
+=======
+%
+%             mh_plot = uimenu(hFig,'Label','Plot');
+%             uimenu(mh_plot, 'Label', 'All unit firing rate vs. aux. input', 'Callback', @(hO, hE)plot_aux_rate_);
+%             uimenu(mh_plot, 'Label', 'Selected unit firing rate vs. aux. input', 'Callback', @(hO, hE)plot_aux_rate_(1));
+%
+            obj.hMenus('InfoMenu') = uimenu(hFig, 'Label', '', 'Tag', 'InfoMenu');
+            uimenu(obj.hMenus('InfoMenu'), 'Label', 'Annotate unit', 'Callback', @(hO, hE) obj.annotateUnit('', true));
+            uimenu(obj.hMenus('InfoMenu'), 'Label', 'Single unit', 'Callback', @(hO, hE) obj.annotateUnit('single', false), 'Accelerator', '1');
+            uimenu(obj.hMenus('InfoMenu'), 'Label', 'Multi unit', 'Callback', @(hO, hE) obj.annotateUnit('multi', false), 'Accelerator', '2');
+            uimenu(obj.hMenus('InfoMenu'), 'Label', 'Noise', 'Callback', @(hO, hE) obj.annotateUnit('noise', false));
+            uimenu(obj.hMenus('InfoMenu'), 'Label', 'Clear annotation', 'Callback', @(hO, hE) obj.annotateUnit('', false));
+            uimenu(obj.hMenus('InfoMenu'), 'Label', 'Equal to', 'Callback', @(hO, hE) obj.annotateUnit('=', true));
+%
+%             mh_help = uimenu(hFig,'Label','Help');
+%             uimenu(mh_help, 'Label', '[H]elp', 'Callback', @help_FigWav_);
+>>>>>>> parent of eb16aa4... WIP: misc
 
             drawnow;
             hFig.outerPosition = outerPosition;
@@ -732,6 +811,7 @@ classdef CurateController < handle
             obj.isWorking = 0;
         end
 
+<<<<<<< HEAD
         function autoDelete(obj)
             %AUTODELETE Automatically delete clusters by SNR/spike count
             if obj.isWorking
@@ -834,6 +914,8 @@ classdef CurateController < handle
             obj.isWorking = 0;
         end
 
+=======
+>>>>>>> parent of eb16aa4... WIP: misc
         function autoSplit(obj, fMultisite)
             %AUTOSPLIT
             if obj.isWorking
@@ -845,7 +927,7 @@ classdef CurateController < handle
                 return;
             end
 
-            if obj.hClust.unitCount(obj.selected) < 2
+            if obj.hClust.clusterCounts(obj.selected) < 2
                 msgbox('At least two spikes required for splitting');
                 return;
             end
@@ -866,7 +948,7 @@ classdef CurateController < handle
             sampledSpikes = jrclust.utils.filtTouV(sampledSpikes, obj.hCfg);
             sampledSpikes = reshape(sampledSpikes, [], size(sampledSpikes, 3));
 
-            % get Vpp of cluster spikes on current site (in FigTime)
+            % get vpp of cluster spikes on current site (in FigTime)
             localSpikes = jrclust.utils.getSampledWindows(obj.hClust, iSpikes, obj.currentSite);
             localSpikes = squeeze(jrclust.utils.filtTouV(localSpikes, obj.hCfg)); % TW calculate amplitudes on the fly
             localVpp = max(localSpikes) - min(localSpikes); % TW calculate amplitudes on the fly
@@ -1013,6 +1095,7 @@ classdef CurateController < handle
                 obj.updateFigWav();
                 obj.updateFigRD(); % centers changed, need replotting
                 obj.updateFigSim();
+<<<<<<< HEAD
                 if numel(deleteMe) == 1 && deleteMe == obj.selected(1)
                     obj.updateSelect(deleteMe);
                 else
@@ -1045,31 +1128,10 @@ classdef CurateController < handle
                 else
                     jrclust.utils.exportToWorkspace(struct('selectedWf', selectedWf), obj.hCfg.verbose);
                 end
+=======
+                obj.updateSelect(min(deleteMe));
+>>>>>>> parent of eb16aa4... WIP: misc
             end
-        end
-
-        function exportTraces(obj)
-            %EXPORTTRACES Export traces from selected cluster to workspace
-            spikesFilt = obj.hClust.spikesFilt;
-            spikesRaw = obj.hClust.spikesRaw;
-            iCluster = obj.selected(1);
-            clusterSpikes = obj.hClust.spikesByCluster{iCluster};
-            nSpikes = numel(clusterSpikes);
-
-            shapeFilt = [size(spikesFilt, 1), obj.hCfg.nSites, nSpikes];
-            shapeRaw = [size(spikesRaw, 1), obj.hCfg.nSites, nSpikes];
-
-            iSpikesFilt = zeros(shapeFilt, 'like', spikesFilt);
-            iSpikesRaw = zeros(shapeRaw, 'like', spikesRaw);
-            spikeNeighbors = obj.hCfg.siteNeighbors(:, obj.hClust.spikeSites);
-
-            for jSpike = 1:nSpikes
-                iSpikesFilt(:, spikeNeighbors(:, jSpike), jSpike) = spikesFilt(:, :, clusterSpikes(jSpike));
-                iSpikesRaw(:, spikeNeighbors(:, jSpike), jSpike) = spikesRaw(:, :, clusterSpikes(jSpike));
-            end
-
-            jrclust.utils.exportToWorkspace(struct(sprintf('spikesFilt%d', iCluster), iSpikesFilt, ...
-                                                   sprintf('spikesRaw%d', iCluster), iSpikesRaw), obj.hCfg.verbose);
         end
 
         function res = figApply(obj, hFun, varargin)
@@ -1121,6 +1183,7 @@ classdef CurateController < handle
             obj.isWorking = 0;
         end
 
+<<<<<<< HEAD
         function plotAuxRate(obj, fSelected)
             %PLOTAUXRATE
             [auxSamples, auxTimes] = loadAuxChannel(obj.hCfg);
@@ -1143,6 +1206,8 @@ classdef CurateController < handle
                                                    'auxTimes', auxTimes), obj.hCfg.verbose);
         end
 
+=======
+>>>>>>> parent of eb16aa4... WIP: misc
         function plotAllFigures(obj)
             %PLOTALLFIGURES Plot all figures
             if isempty(obj.hFigs)
@@ -1263,7 +1328,7 @@ classdef CurateController < handle
         end
 
         function updateMenu(obj)
-            %UPDATEMENU update menu entry to indicate selected clusters
+            % update menu entry to indicate selected clusters
             if numel(obj.selected) > 1 && obj.hasMenu('InfoMenu')
                 menuLabel = sprintf('Unit %d "%s" vs. Unit %d "%s"', obj.selected(1), ...
                                     obj.hClust.clusterNotes{obj.selected(1)}, obj.selected(2), ...
@@ -1370,10 +1435,14 @@ classdef CurateController < handle
         function res = endSession(obj)
             %ENDSESSION Finish curating and return results
             if nargout == 0
+<<<<<<< HEAD
                 success = obj.saveFiles();
                 if ~success
                     return;
                 end
+=======
+                obj.saveFiles(); % ask
+>>>>>>> parent of eb16aa4... WIP: misc
             end
             obj.isEnding = 1;
             obj.closeFigures();
@@ -1397,49 +1466,15 @@ classdef CurateController < handle
 
         function resetPositions(obj)
             obj.figApply(@(hFig) hFig.resetPos());
-            obj.allToForeground();
         end
 
         function saveFigures(obj, ext)
-            %SAVEFIGURES Save figures
-            prefix = sprintf('jrc4_%s_', datestr(now, 'yyyy-mm-dd-HHMM'));
-            dlgAns = inputdlg('Figure name prefix', 'Save figure set', 1, {prefix});
-            if isempty(dlgAns)
-                return;
-            end
-            prefix = dlgAns{1};
-
-            if obj.hCfg.verbose
-                fprintf('Saving figures...\n');
-                t1 = tic;
-            end
-
-            figKeys = keys(obj.hFigs);
-            for iFig = 1:numel(figKeys)
-                hFig = obj.hFigs(figKeys{iFig});
-                if ~hFig.isReady
-                    continue;
-                end
-
-                filename = fullfile(obj.hCfg.outputDir, [prefix, hFig.figApply(@get, 'Tag'), ext]);
-                if strcmpi(ext, '.fig')
-                    savefig(hFig.hFig, filename, 'compact');
-                else
-                    saveas(hFig.hFig, filename, ext(2:end));
-                end
-
-                if obj.hCfg.verbose
-                    fprintf('\t%s\n', filename);
-                end
-            end
-
-            if obj.hCfg.verbose
-                fprintf('\ttook %0.1fs\n', toc(t1));
-            end
+            fprintf('saving figs as %s\n', ext);
         end
 
-        function success = saveFiles(obj)
+        function saveFiles(obj)
             %SAVEFILES Save files to disk
+<<<<<<< HEAD
             [~, sessionName, ~] = fileparts(obj.hCfg.configFile);
             filename = fullfile(obj.hCfg.outputDir, [sessionName '_res.mat']);
 
@@ -1464,6 +1499,9 @@ classdef CurateController < handle
             else
                 success = 0;
             end
+=======
+            disp('saveFiles');
+>>>>>>> parent of eb16aa4... WIP: misc
         end
     end
 

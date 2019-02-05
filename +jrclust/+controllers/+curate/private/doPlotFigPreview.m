@@ -159,8 +159,13 @@ function hFigPreview = doPlotFigPreview(hFigPreview, figData, fKeepView, hCfg)
 
 
     %% finish up
+<<<<<<< HEAD
     hFigPreview.wait(0);
     jrclust.utils.tryClose(hWait);
+=======
+    hFigPreview.wait(false);
+    close(hWait);
+>>>>>>> parent of eb16aa4... WIP: misc
 end
 
 %% LOCAL FUNCTIONS

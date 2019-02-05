@@ -3,9 +3,9 @@ function hFigSim = doPlotFigSim(hFigSim, hClust, hCfg)
     hFigSim.wait(1);
 
     nClusters = hClust.nClusters;
-    if ~hFigSim.hasAxes('default') % create from scratch
+    if isempty(hFigSim.figData) % create from scratch
         hFigSim.addAxes('default');
-        hFigSim.axApply('default', @set, 'Position', [.1 .1 .8 .8], ...
+        hFigSim.axApply(@set, 'Position', [.1 .1 .8 .8], ...
                         'XLimMode', 'manual', ...
                         'YLimMode', 'manual', ...
                         'Layer', 'top', ...
@@ -36,7 +36,7 @@ function hFigSim = doPlotFigSim(hFigSim, hClust, hCfg)
         hFigSim.addPlot('hCursorV', @line, [1 1], [.5 nClusters + .5], 'Color', hCfg.colorMap(2, :), 'LineWidth', 1.5);
         hFigSim.addPlot('hCursorH', @line, [.5 nClusters + .5], [1 1], 'Color', hCfg.colorMap(3, :), 'LineWidth', 1.5);
 
-        hFigSim.axApply('default', @colorbar);
+        hFigSim.colorbar();
         hFigSim.addDiag('hDiag', [0, nClusters, 0.5], 'Color', [0 0 0], 'LineWidth', 1.5);
     else
         if strcmp(hFigSim.figData.figView, 'kilosort') && isprop(hClust, 'kSimScore')

@@ -77,8 +77,8 @@ classdef JRC < handle & dynamicprops
             end
 
             switch obj.cmd
-                % deprecated commands; will be removed in a future release
-                case {'compile-ksort', 'dir', 'edit', 'git-pull', 'issue', 'import-kilosort-sort', ...
+                % deprecated commands; may be removed in a future release
+                case {'compile-ksort', 'edit', 'git-pull', 'issue', 'import-kilosort-sort', ...
                       'import-ksort-sort', 'kilosort', 'kilosort-verify', 'ksort', 'ksort-verify' ...
                       'which', 'wiki', 'wiki-download'}
                     jrclust.utils.depWarn(obj.cmd);
@@ -244,6 +244,7 @@ classdef JRC < handle & dynamicprops
             end
 
             % command sentinel
+<<<<<<< HEAD
             detectCmds = {'detect', 'detect-sort', 'full'};
             sortCmds   = {'sort', 'detect-sort', 'full'};
             curateCmds = {'manual', 'full'};
@@ -251,6 +252,9 @@ classdef JRC < handle & dynamicprops
 
             legalCmds = unique([detectCmds, sortCmds curateCmds miscCmds]);
 
+=======
+            legalCmds = {'detect', 'sort', 'manual', 'full', 'traces', 'preview'};
+>>>>>>> parent of eb16aa4... WIP: misc
             if ~any(strcmpi(obj.cmd, legalCmds))
                 obj.errMsg = sprintf('Command `%s` not recognized', obj.cmd);
                 errordlg(obj.errMsg, 'Unrecognized command');
@@ -259,6 +263,10 @@ classdef JRC < handle & dynamicprops
             end
 
             % determine which commands in the pipeline to run
+            detectCmds = {'detect', 'full'};
+            sortCmds   = {'sort', 'spikesort', 'full'};
+            curateCmds = {'manual', 'full'};
+
             if any(strcmp(obj.cmd, curateCmds))
                 obj.isCurate = 1;
             end
@@ -306,6 +314,7 @@ classdef JRC < handle & dynamicprops
             end
         end
 
+<<<<<<< HEAD
         function rerun(obj)
             %RERUN Rerun commands
             if obj.isError
@@ -316,6 +325,8 @@ classdef JRC < handle & dynamicprops
             end
         end
 
+=======
+>>>>>>> parent of eb16aa4... WIP: misc
         function run(obj)
             %RUN Run commands
             if obj.isError
@@ -327,6 +338,7 @@ classdef JRC < handle & dynamicprops
                 return;
             end
 
+<<<<<<< HEAD
             % try to warm up the local parallel pool before taking a swim
             if obj.hCfg.useParfor && (obj.isDetect || obj.isSort)
                 try
@@ -342,6 +354,9 @@ classdef JRC < handle & dynamicprops
                 obj.res = [];
             end
 
+=======
+            % try to load sort and detect results
+>>>>>>> parent of eb16aa4... WIP: misc
             if obj.isCurate && ~obj.isSort
                 if ~isfield(obj.res, 'hClust')
                     dlgAns = questdlg('Could not find all required data. Sort?', 'Sorting required', 'No');
@@ -462,11 +477,50 @@ classdef JRC < handle & dynamicprops
                 obj.hCurate.beginSession();
             end
 
+<<<<<<< HEAD
             obj.isCompleted = 1;
         end
 
         function saveFiles(obj, saveBinaries, saveConfig)
             %SAVEFILES Save results struct to disk
+=======
+            % MISCELLANEOUS COMMANDS
+            if strcmp(obj.cmd, 'preview')
+                hPreview = jrclust.controllers.curate.PreviewController(obj.hCfg);
+                hPreview.preview();
+            end
+
+            if strcmp(obj.cmd, 'traces')
+                hTraces = jrclust.controllers.curate.TracesController(obj.hCfg);
+                if numel(obj.args) > 1
+                    recID = str2double(obj.args{2});
+                    if isnan(recID)
+                        recID = [];
+                    end
+                else
+                    recID = [];
+                end
+                hTraces.show(recID, false, obj.hClust);
+            end
+
+            % save our results for later
+            obj.saveFiles();
+            obj.isCompleted = true;
+        end
+
+        function rerun(obj)
+            %RERUN Rerun commands
+            if obj.isError
+                error(obj.errMsg);
+            else
+                obj.isCompleted = false;
+                obj.run();
+            end
+        end
+
+        function saveFiles(obj)
+            %SAVEFILES Save results structs and binary files to disk
+>>>>>>> parent of eb16aa4... WIP: misc
             if obj.isError
                 error(obj.errMsg);
             end

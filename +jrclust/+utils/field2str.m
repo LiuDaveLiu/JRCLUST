@@ -1,10 +1,11 @@
 function strval = field2str(val)
     %FIELD2STR Convert a value to a canonical string representation
+
     switch class(val)
         case {'int', 'int16', 'int32', 'uint16', 'uint32'}
             formatstr = '%d';
 
-        case {'double', 'single', 'logical'}
+        case {'double', 'single'}
             if numel(val) == 1 && mod(val(1), 1) == 0
                 formatstr = '%d';
             else

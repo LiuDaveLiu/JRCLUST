@@ -5,16 +5,28 @@ function hFigPos = doPlotFigPos(hFigPos, hClust, hCfg, selected, maxAmp)
         c2Data = hClust.exportUnitInfo(selected(2));
     end
 
-    if ~hFigPos.hasAxes('default')
+    if isempty(hFigPos.figData)
         hFigPos.addAxes('default');
+<<<<<<< HEAD
     else
         hFigPos.axApply('default', @cla);
+=======
+        hFigPos.figData.isPlotted = true;
+    else
+        hFigPos.cla();
+        hFigPos.axApply('default', @hold, 'on');
+>>>>>>> parent of eb16aa4... WIP: misc
     end
 
     plotPosUnit(c1Data, hFigPos, hCfg, 0, maxAmp);
 
+<<<<<<< HEAD
     clusterPos = hClust.clusterCentroids(c1Data.cluster, :)/hCfg.umPerPix;
     nSpikes = hClust.unitCount(c1Data.cluster);
+=======
+    clusterPos = hClust.clusterCentroids(c1Data.cluster, :)/hCfg.um_per_pix;
+    nSpikes = hClust.clusterCounts(c1Data.cluster);
+>>>>>>> parent of eb16aa4... WIP: misc
 
     if numel(selected) == 1
         figTitle = sprintf('Unit %d: %d spikes; (X=%0.1f, Y=%0.1f) [um]', c1Data.cluster, nSpikes, clusterPos);
@@ -24,9 +36,15 @@ function hFigPos = doPlotFigPos(hFigPos, hClust, hCfg, selected, maxAmp)
         catch
         end
     else
+<<<<<<< HEAD
         nSpikes2 = hClust.unitCount(c2Data.cluster);
         clusterPos2 = hClust.clusterCentroids(c2Data.cluster, :)/hCfg.umPerPix;
         plotPosUnit(c2Data, hFigPos, hCfg, 1, maxAmp);
+=======
+        nSpikes2 = hClust.clusterCounts(c2Data.cluster);
+        clusterPos2 = hClust.clusterCentroids(c2Data.cluster, :)/hCfg.um_per_pix;
+        plotPosUnit(c2Data, hFigPos, hCfg, true, maxAmp);
+>>>>>>> parent of eb16aa4... WIP: misc
 
         figTitle = sprintf('Unit %d(black)/%d(red); (%d/%d) spikes\n(X=%0.1f/%0.1f, Y=%0.1f/%0.1f) [um]', ...
             c1Data.cluster, c2Data.cluster, nSpikes, nSpikes2, ...

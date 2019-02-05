@@ -1,6 +1,11 @@
 classdef DensityPeakClustering < jrclust.interfaces.Clustering
     %DENSITYPEAKCLUSTERING A Rodriguez-Laio clustering of spike data
+<<<<<<< HEAD
     properties (Hidden, SetObservable)
+=======
+
+    properties (SetAccess=protected, SetObservable)
+>>>>>>> parent of eb16aa4... WIP: misc
         hCfg;               % Config object
     end
 
@@ -33,7 +38,7 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
         viSite_clu;         % => clusterSites
         viSite_min_clu;     % => unitPeakSites
         vnSite_clu;         % => nSitesOverThresh
-        vnSpk_clu;          % => unitCount
+        vnSpk_clu;          % => clusterCounts
         vrIsiRatio_clu;     % => unitISIRatio
         vrIsoDist_clu;      % => unitIsoDist
         vrLRatio_clu;       % => unitLRatio
@@ -51,7 +56,11 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
     properties (SetAccess=private, SetObservable)
         clusterCenters;     % cluster centers
         clusterCentroids;   % centroids of clusters on the probe
+<<<<<<< HEAD
         unitCount;          % number of spikes per cluster
+=======
+        clusterCounts;      % number of spikes per cluster
+>>>>>>> parent of eb16aa4... WIP: misc
         clusterNotes;       % notes on clusters
         clusterSites;       % site on which spikes in this cluster most often occur
         editPos;            % current position in edit history
@@ -231,8 +240,12 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             updateMe = arrayfun(@(i) find(union(keepMe, updateMe) == i), updateMe);
             obj.refresh(0, updateMe); % recount
 
+<<<<<<< HEAD
             arrayfun(@obj.rmRefracSpikes, updateMe); % remove refrac spikes
             obj.removeEmptyClusters();
+=======
+            obj.rmRefracSpikes(updateMe); % remove refrac spikes
+>>>>>>> parent of eb16aa4... WIP: misc
 
             % update cluster waveforms and distance
             obj.computeMeanWaveforms(updateMe);
@@ -266,7 +279,7 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
 
         function removeEmptyClusters(obj)
             %REMOVEEMPTYCLUSTERS Find and remove empty clusters
-            keepClusters = obj.unitCount > 0;
+            keepClusters = obj.clusterCounts > 0;
             if all(keepClusters)
                 return;
             end
@@ -342,7 +355,7 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
                 end
 
                 % cluster-wise summaries
-                sumFields = {'unitCount', 'clusterSites', 'spikesByCluster'};
+                sumFields = {'clusterCounts', 'clusterSites', 'spikesByCluster'};
                 for i = 1:numel(sumFields)
                     mf = sumFields{i};
                     if isfield(sRes, mf)
@@ -402,7 +415,6 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
     %% USER METHODS
     methods
         function addNote(obj, iCluster, note)
-            %ADDNOTE Annotate a cluster
             if iCluster < 1 || iCluster > obj.nClusters
                 return;
             end
@@ -410,15 +422,21 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             obj.clusterNotes{iCluster} = note;
         end
 
+<<<<<<< HEAD
         function success = autoMerge(obj, maxUnitSim)
             %AUTOMERGE Automatically merge clusters
             success = 0;
 
+=======
+        function autoMerge(obj, doAssign)
+            %AUTOMERGE Automatically merge clusters
+>>>>>>> parent of eb16aa4... WIP: misc
             if obj.nEdits ~= obj.editPos % not at tip of edit history, back out
                 warning('cannot branch from history; use revert() first');
                 return;
             end
 
+<<<<<<< HEAD
             if nargin > 1
                 try
                     obj.hCfg.setTemporaryParams('maxUnitSim', maxUnitSim);
@@ -426,6 +444,14 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
                     warning('autoMerge aborted: %s', ME.message);
                     return;
                 end
+=======
+            if nargin < 2
+                doAssign = false;
+            end
+
+            if doAssign
+                obj.reassign();
+>>>>>>> parent of eb16aa4... WIP: misc
             end
 
             obj.refresh(1, []);
@@ -443,12 +469,15 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             obj.computeQualityScores();
             commitMsg = sprintf('%s;autoMerge', datestr(now, 31));
             obj.commit(commitMsg);
+<<<<<<< HEAD
 
             if nargin == 2
                 obj.hCfg.resetTemporaryParams('maxUnitSim');
             end
 
             success = 1;
+=======
+>>>>>>> parent of eb16aa4... WIP: misc
         end
 
         function clearNotes(obj)
@@ -456,6 +485,7 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             obj.clusterNotes = arrayfun(@(~) '', 1:obj.nClusters, 'UniformOutput', 0);
         end
 
+<<<<<<< HEAD
         function rates = firingRates(obj, clusters, nSamples)
             %FIRINGRATES Compute firing rates for specified clusters
             if nargin < 2
@@ -488,6 +518,8 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             end
         end
 
+=======
+>>>>>>> parent of eb16aa4... WIP: misc
         function commit(obj, msg)
             %COMMIT Commit a modification of clustering to history log
             %   Message format: parts are separated by a semicolon, no spaces
@@ -651,8 +683,10 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
                 return;
             end
 
+            %obj.hCfg.useGPU = false; % disable GPU for this
             obj.simScore = doComputeWaveformSim(obj, updateMe);
             obj.simScore = jrclust.utils.setDiag(obj.simScore, obj.computeSelfSim());
+            %obj.hCfg.useGPU = true; % disable GPU for this
         end
 
         function computeQualityScores(obj, updateMe)
@@ -710,11 +744,16 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             end
         end
 
-        function doWaveformMerge(obj)
+        function doWaveformMerge(obj, maxWavCor)
             %DOWAVEFORMMERGE Merge clusters by waveform-based similarity scores
             if obj.nEdits ~= obj.editPos % not at tip of edit history, back out
                 warning('cannot branch from history; use revert() first');
                 return;
+            end
+
+            if nargin == 2 && ~isempty(maxWavCor)
+                mwcOld = obj.hCfg.maxWavCor;
+                obj.hCfg.maxWavCor = mwcOld;
             end
 
             obj.computeMeanWaveforms();
@@ -791,6 +830,7 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             end
         end
 
+<<<<<<< HEAD
         function success = exportToCSV(obj, zeroIndex)
             %EXPORTTOCSV Export spike times, sites, and clusters to CSV
             if nargin < 2
@@ -884,6 +924,8 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             success = 1;
         end
 
+=======
+>>>>>>> parent of eb16aa4... WIP: misc
         function uInfo = exportUnitInfo(obj, iCluster)
             %EXPORTUNITINFO Get all data pertinent to a cluster
             if ~ismember(iCluster, 1:obj.nClusters)
@@ -990,8 +1032,8 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             if ~isempty(obj.clusterCenters) && numel(obj.clusterCenters) ~= obj.nClusters
                 inconsistencies{end+1} = sprintf('clusterCenters: expected %d, actual %d', obj.nClusters, numel(obj.clusterCenters));
             end
-            if ~isempty(obj.unitCount) && numel(obj.unitCount) ~= obj.nClusters
-                inconsistencies{end+1} = sprintf('unitCount: expected %d, actual %d', obj.nClusters, numel(obj.unitCount));
+            if ~isempty(obj.clusterCounts) && numel(obj.clusterCounts) ~= obj.nClusters
+                inconsistencies{end+1} = sprintf('clusterCounts: expected %d, actual %d', obj.nClusters, numel(obj.clusterCounts));
             end
             if ~isempty(obj.clusterSites) && numel(obj.clusterSites) ~= obj.nClusters
                 inconsistencies{end+1} = sprintf('clusterSites: expected %d, actual %d', obj.nClusters, numel(obj.clusterSites));
@@ -1095,7 +1137,7 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             obj.subsetFields(argsort);
 %             obj.spikesByCluster = obj.spikesByCluster(argsort);
 %             obj.clusterSites = obj.clusterSites(argsort);
-%             obj.unitCount = obj.unitCount(argsort);
+%             obj.clusterCounts = obj.clusterCounts(argsort);
 %             obj.clusterNotes = obj.clusterNotes(argsort);
 %             if ~isempty(obj.clusterCentroids)
 %                 obj.clusterCentroids = obj.clusterCentroids(argsort, :);
@@ -1141,6 +1183,7 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
 
         function refresh(obj, doRemoveEmpty, updateMe)
             %REFRESH Recount and store spikes by cluster, optionally removing empty clusters
+<<<<<<< HEAD
             if nargin < 2
                 doRemoveEmpty = 0;
             end
@@ -1151,14 +1194,24 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             if isempty(updateMe)
                 obj.spikesByCluster = arrayfun(@(iC) find(obj.spikeClusters == iC), 1:obj.nClusters, 'UniformOutput', 0);
                 obj.unitCount = cellfun(@numel, obj.spikesByCluster);
+=======
+            if isempty(updateMe)
+                obj.spikesByCluster = arrayfun(@(iC) find(obj.spikeClusters == iC), 1:obj.nClusters, 'UniformOutput', false);
+                obj.clusterCounts = cellfun(@numel, obj.spikesByCluster);
+>>>>>>> parent of eb16aa4... WIP: misc
                 if ~isempty(obj.spikeSites)
                     obj.clusterSites = double(arrayfun(@(iC) mode(obj.spikeSites(obj.spikesByCluster{iC})), 1:obj.nClusters));
                 else
                     obj.clusterSites = [];
                 end
             else
+<<<<<<< HEAD
                 obj.spikesByCluster(updateMe) = arrayfun(@(iC) find(obj.spikeClusters == iC), updateMe, 'UniformOutput', 0);
                 obj.unitCount(updateMe) = cellfun(@numel, obj.spikesByCluster(updateMe));
+=======
+                obj.spikesByCluster(updateMe) = arrayfun(@(iC) find(obj.spikeClusters == iC), updateMe, 'UniformOutput', false);
+                obj.clusterCounts(updateMe) = cellfun(@numel, obj.spikesByCluster(updateMe));
+>>>>>>> parent of eb16aa4... WIP: misc
                 if ~isempty(obj.spikeSites)
                     obj.clusterSites(updateMe) = double(arrayfun(@(iC) mode(obj.spikeSites(obj.spikesByCluster{iC})), updateMe));
                 else
@@ -1238,7 +1291,7 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
                 if any(exclude)
                     obj.spikesByCluster{iCluster} = iSpikes(~exclude);
                     obj.spikeClusters(iSpikes(exclude)) = 0; % classify as noise
-                    obj.unitCount(iCluster) = numel(obj.spikesByCluster{iCluster});
+                    obj.clusterCounts(iCluster) = numel(obj.spikesByCluster{iCluster});
                 end
 
                 fprintf('.');
@@ -1294,7 +1347,7 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
                 obj.spikeClusters(clusterSpikes_(~keepMe)) = 0; % assign to noise cluster
 
                 obj.spikesByCluster{iCluster} = clusterSpikes_(keepMe);
-                obj.unitCount(iCluster) = sum(keepMe);
+                obj.clusterCounts(iCluster) = sum(keepMe);
             end
         end
 
@@ -1405,9 +1458,9 @@ classdef DensityPeakClustering < jrclust.interfaces.Clustering
             cn = obj.clusterNotes;
         end
 
-        % unitCount/vnSpk_clu
+        % clusterCounts/vnSpk_clu
         function cc = get.vnSpk_clu(obj)
-            cc = obj.unitCount;
+            cc = obj.clusterCounts;
         end
 
         % clusterSites/viSite_clu

@@ -1,7 +1,5 @@
 function hMsgbox = qMsgBox(msg, fBlock, fModal)
     %QMSGBOX msgbox with some reasonable defaults
-    hMsgbox = [];
-
     if nargin < 2
         fBlock = 0;
     end
@@ -15,6 +13,7 @@ function hMsgbox = qMsgBox(msg, fBlock, fModal)
         try
             hMsgbox = msgbox(msg, jrclust.utils.ifEq(fModal, 'modal', 'non-modal'));
         catch
+            hMsgbox = [];
         end
     end
 end

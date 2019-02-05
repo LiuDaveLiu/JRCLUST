@@ -9,7 +9,7 @@ function hFigISI = doPlotFigISI(hFigISI, hClust, hCfg, selected)
     end
 
     [iIsiK, iIsiK1] = getReturnMap(iCluster, hClust, hCfg);
-    if ~hFigISI.hasAxes('default')
+    if isempty(hFigISI.figData)
         hFigISI.addAxes('default');
         hFigISI.addPlot('foreground', nan, nan, 'Color', hCfg.colorMap(2, :), 'Marker', 'o', 'LineStyle', 'none');
         hFigISI.addPlot('foreground2', nan, nan, 'Color', hCfg.colorMap(3, :), 'Marker', 'o', 'LineStyle', 'none');
