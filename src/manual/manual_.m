@@ -12,17 +12,14 @@ function manual_(P, vcMode)
         fprintf(2, 'File must be sorted first (run "jrc spikesort %s")\n', P.vcFile_prm);
         return;
     end
-
     [S0, P] = load_cached_(P);
     if ~isfield(S0, 'mrPos_spk')
         S0.mrPos_spk = jrclust.utils.spikePos(S0.viSite_spk, trFet_spk, P);
         set(0, 'UserData', S0);
     end
-
     fDebug_ui = 0;
     P.fGpu = 0; %do not use GPU for manual use
     set0_(fDebug_ui, P);
-
     if strcmpi(vcMode, 'normal')
         if ~isempty(get_set_(S0, 'cS_log', {}))
             switch lower(questdlg_('Load last saved?', 'Confirmation'))
@@ -33,10 +30,8 @@ function manual_(P, vcMode)
                                        'spikePositions', S0.mrPos_spk);
                     [S_clu, S0] = jrclust.cluster.autoMerge(S0.S_clu, spikeData, P);
                     S0 = clear_log_(S0);
-
                 case 'cancel'
                     return;
-
                 case 'yes'
                     S0 = set0_(P); %update the P structure
                     S0.S_clu.updateWaveforms(P);
@@ -91,10 +86,7 @@ function manual_(P, vcMode)
     S0 = keyPressFcn_cell_(get_fig_cache_('FigWav'), {'z'}, S0); %zoom
     %S0.cS_log = load_(strrep(P.vcFile_prm, '.prm', '_log.mat'), 'cS_log', 0);
     S_log = load_(strrep(P.vcFile_prm, '.prm', '_log.mat'), [], 0);
-
-    if ~isempty(S_log)
-        S0.cS_log = {S_log};
-    end
+    if ~isempty(S_log), S0.cS_log = {S_log}; end
     save_log_('start', S0); %crash proof log
 
     % Finish up
