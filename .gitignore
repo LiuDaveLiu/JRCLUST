@@ -11,6 +11,10 @@ sample*.csv
 # docs
 docs/build
 
+<<<<<<< HEAD
 # Misc
 *.mat
+=======
+# Jupyter notebooks
+>>>>>>> parent of 77307ed... Merge pull request #55 from vidriotech/master
 *.ipynb

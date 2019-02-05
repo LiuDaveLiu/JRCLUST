@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 % JRCLUST v4
 % Alan Liddell, Vidrio Technologies
 % Originally written by James Jun
@@ -190,3 +191,11 @@ end
 %     elseif fError
 %         help_();
 %     end
+=======
+function jrc(varargin)
+% calls jrclust
+warning off;
+%jrclust(varargin{:});
+fprintf('Running ''%s%sjrc3.m''\n', fileparts(mfilename('fullpath')), filesep());
+jrc3(varargin{:});
+>>>>>>> parent of 77307ed... Merge pull request #55 from vidriotech/master
